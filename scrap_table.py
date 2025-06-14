@@ -22,7 +22,7 @@ def lambda_handler(event, context):
     table = soup.find('table')
     if not table:
         return {
-            'statusCode': ,200
+            'statusCode': 200,
             'body': 'RosExp2030'
         }
 
