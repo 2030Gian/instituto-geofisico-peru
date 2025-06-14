@@ -11,10 +11,10 @@ provider:
 
 functions:
   scrape_table:
-    handler: scrape_table.lambda_handler
+    handler: scrap_table.lambda_handler
     package:
       include:
-        - scrape_table.py
+        - scrap_table.py
     events:
       - http:
           path: /scrape/table
