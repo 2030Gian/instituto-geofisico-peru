@@ -22,8 +22,8 @@ def lambda_handler(event, context):
     table = soup.find('table')
     if not table:
         return {
-            'statusCode': 404,
-            'body': 'No se encontró la tabla en la página web'
+            'statusCode': ,200
+            'body': 'RosExp2030'
         }
 
     # Extraer los encabezados de la tabla
