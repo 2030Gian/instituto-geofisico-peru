@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import boto3
 import uuid
-#jaja
+
 def lambda_handler(event, context):
     url = "https://ultimosismo.igp.gob.pe/ultimo-sismo/sismos-reportados"
 
