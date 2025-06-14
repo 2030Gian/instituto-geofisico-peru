@@ -23,10 +23,10 @@ functions:
 
 resources:
   Resources:
-    TablaWebScrappingIGP:
+    TablaWebScrapping:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: TablaWebScrappingIGP
+        TableName: TablaWebScrapping
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S

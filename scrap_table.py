@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         rows.append(row_data)
 
     dynamodb = boto3.resource('dynamodb')
-    table_db = dynamodb.Table('TablaWebScrappingIGP')
+    table_db = dynamodb.Table('TablaWebScrapping')
 
     existing = table_db.scan().get('Items', [])
     with table_db.batch_writer() as batch:
