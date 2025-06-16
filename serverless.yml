@@ -1,60 +1,38 @@
 org: gian2030rosexp
-service: api-web-scraping-sismos-selenium # Nuevo nombre de servicio para esta versión
+service: api-web-scraping
 
 provider:
   name: aws
   runtime: python3.12
-  memorySize: 1536 # Aumentar la memoria para Selenium (mínimo 1024, mejor 1.5GB o 2GB)
-  timeout: 60    # Aumentar el tiempo de espera (Selenium puede tardar en iniciar y cargar)
+  # Default memory size for functions (default: 1024MB)
+  memorySize: 1024
+  timeout: 30
   iam:
-    role: arn:aws:iam::153620185912:role/LabRole # Asegúrate de que este rol tenga los permisos necesarios para Lambda y DynamoDB
+    role: arn:aws:iam::153620185912:role/LabRole
 
 functions:
-  get_sismos_selenium: # Nombre de la función Lambda
-    handler: scrap_table.lambda_handler # Archivo y función a ejecutar
-    # Configuración de paquete para incluir solo lo necesario
+  scrape_table:
+    handler: scrap_table.lambda_handler  # Asegúrarse de que el nombre del archivo y la función coincidan
     package:
-      individually: true # Empaquetar esta función individualmente
-      exclude:
-        - '**' # Excluir todo por defecto
       include:
-        - scrap_table.py # Incluir nuestro script principal
-    # Capas de Lambda: AQUI DEBES ESPECIFICAR EL ARN DE TU CAPA DE CHROMIUM/CHROMEDRIVER
-    layers:
-      # EJEMPLO: Reemplaza con el ARN REAL de la capa de Chromium/Chromedriver en tu región.
-      # Puedes buscar capas públicas o crear una.
-      # Ejemplo para us-east-1 (pueden variar): arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:46
-      # Asegúrate que la capa sea compatible con Python 3.12 y Amazon Linux 2.
-      - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:50 # ESTE ES EL ARN
-
+        - ./**  # Incluir todo el contenido del directorio
     events:
       - http:
-          path: /sismos-selenium # Path para acceder a esta función vía API Gateway
+          path: /scrape/table
           method: get
           cors: true
           integration: lambda
 
-plugins:
-  - serverless-python-requirements # Plugin para gestionar las dependencias Python
-
-custom:
-  pythonRequirements:
-    dockerizePip: true # Usa Docker para empaquetar dependencias si tienes problemas de compatibilidad (Linux vs Mac/Windows)
-    slim: true # Reduce el tamaño del paquete de dependencias
-    # layers: # Esta es otra forma de integrar dependencias Python en capas, pero lo manejamos con el paquete de la función.
-    #   - arn:aws:lambda:REGION:ACCOUNT_ID:layer:PythonRequirementsLayer:VERSION # Si quieres tus requisitos en una capa separada
-    # Solo si los requisitos no son muy grandes, incluirlos en el paquete de la función es más simple.
-
 resources:
   Resources:
-    TablaSismosSelenium: # Nuevo nombre para la tabla DynamoDB para esta implementación
+    TablaWebScrapping:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: TablaSismosSelenium # Nombre real de la tabla en DynamoDB
+        TableName: TablaWebScrapping
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        BillingMode: PAY_PER_REQUEST # Modelo de facturación bajo demanda
+        BillingMode: PAY_PER_REQUEST
